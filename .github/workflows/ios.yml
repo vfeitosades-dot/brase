@@ -1,0 +1,43 @@
+name: Compilar Brisa para iOS
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Testar barra de endereço
+        run: |
+          swiftc Brisa/BrowserAddress.swift Checks/main.swift -o "$RUNNER_TEMP/brisa-checks"
+          "$RUNNER_TEMP/brisa-checks"
+      - name: Compilar para iPhone
+        run: |
+          xcodebuild -version
+          xcodebuild -project Brisa.xcodeproj -scheme Brisa -configuration Release \
+            -destination 'generic/platform=iOS' -derivedDataPath "$RUNNER_TEMP/BrisaBuild" \
+            CODE_SIGNING_ALLOWED=NO build
+      - name: Empacotar IPA sem assinatura
+        run: |
+          app="$RUNNER_TEMP/BrisaBuild/Build/Products/Release-iphoneos/Brisa.app"
+          test "$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$app/Info.plist")" = '15.0'
+          test -f "$app/AdRules.json"
+          xcrun lipo -verify_arch arm64 "$app/Brisa"
+          mkdir -p package/Payload
+          cp -R "$app" package/Payload/
+          (cd package && ditto -c -k --keepParent Payload ../Brisa-sem-assinatura.ipa)
+          shasum -a 256 Brisa-sem-assinatura.ipa > Brisa-sem-assinatura.ipa.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Brisa-iOS15
+          path: |
+            Brisa-sem-assinatura.ipa
+            Brisa-sem-assinatura.ipa.sha256
+          if-no-files-found: error
