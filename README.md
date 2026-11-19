@@ -14,7 +14,9 @@ Com uma Conta Apple gratuita, o perfil de desenvolvimento expira em sete dias. B
 
 ## Obter o IPA pelo GitHub
 
-Em **Actions → Compilar Brisa para iOS**, abra uma execução concluída e baixe o artefato **Brisa-iOS15**. Descompacte o arquivo para obter `Brisa-sem-assinatura.ipa`. O IPA precisa ser assinado para instalação. Uma opção com Mac ou Windows é o AltStore Classic usando sua própria Conta Apple. [Guia oficial do AltStore](https://faq.altstore.io/altstore-classic/your-altstore).
+Baixe `Brisa-sem-assinatura.ipa` na [última versão publicada](https://github.com/vfeitosades-dot/brase/releases/latest). Para instalar, assine o IPA com sua Conta Apple. Você pode usar o AltStore Classic no Mac ou Windows. [Guia oficial do AltStore](https://faq.altstore.io/altstore-classic/your-altstore).
+
+Para obter a compilação de um commit específico, abra **Actions → Compilar Brisa para iOS**, escolha uma execução concluída e descompacte o artefato **Brisa-iOS15**.
 
 ## Testar o Instagram no iPhone SE
 

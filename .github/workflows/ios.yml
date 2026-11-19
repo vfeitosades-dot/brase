@@ -29,7 +29,7 @@ jobs:
           app="$RUNNER_TEMP/BrisaBuild/Build/Products/Release-iphoneos/Brisa.app"
           test "$(/usr/libexec/PlistBuddy -c 'Print :MinimumOSVersion' "$app/Info.plist")" = '15.0'
           test -f "$app/AdRules.json"
-          xcrun lipo -verify_arch arm64 "$app/Brisa"
+          xcrun lipo "$app/Brisa" -verify_arch arm64
           mkdir -p package/Payload
           cp -R "$app" package/Payload/
           (cd package && ditto -c -k --keepParent Payload ../Brisa-sem-assinatura.ipa)
